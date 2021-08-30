@@ -1,0 +1,191 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de manipulação de produtos",
+    "description": "Esse api tem como objetivo a manipulação dos produtos",
+    "termsOfService": "http://localhost:3000/terms",
+    "contact": {
+      "email": "weneplay5@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {"url": "http://localhost:3000/v1",
+    "description": "API de Testes"},
+    {"url": "http://wenedev.site/v1",
+      "description": "API de Produção"}
+  ],
+  "paths": {
+    "/products": {
+      "post": {
+        "summary": "Cadastro de Produto",
+        "description": "Essa rota será responsável por cadastro de produto.",
+        "tags": ["Products"],
+        "security": [{"bearerAuth": []}],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              },
+              "examples":{
+                "product": {
+                  "value": {
+                    "name": "Teclado Gamer",
+                    "description": "Teclado Gamer RGB",
+                    "price": 587.74
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Product Already Exists"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+
+        }
+      }
+    },
+    "/products/findByName":{
+      "get": {
+        "description": "Rota de Busca de produtos pelo nome",
+        "summary": "Busca de Produtos pelo nome",
+        "tags": ["Products"],
+        "parameters": [{
+          "name":"name",
+          "in": "query",
+          "description": "Nome do Produto para busca.",
+          "required": true
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"array",
+                  "itens": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}":{
+      "get": {
+        "description": "Rota de Busca de produtos pelo id",
+        "summary": "Busca de Produtos pelo id",
+        "tags": ["Products"],
+        "parameters": [{
+          "name":"id",
+          "in": "path",
+          "description": "ID do Produto para Busca.",
+          "required": true
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Alteração de produtos pelo id",
+        "summary": "Alterar produto pelo id",
+        "tags": ["Products"],
+        "security": [{"bearerAuth": []}],
+        "parameters": [{
+          "name":"id",
+          "in": "path",
+          "description": "ID do Produto para Busca.",
+          "required": true
+        }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              },
+              "examples":{
+                "product": {
+                  "value": {
+                    "name": "Teclado sem fio Gamer",
+                    "description": "Teclado sem fio Gamer RGB",
+                    "price": 587.74
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
